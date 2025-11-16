@@ -77,6 +77,11 @@ sudo apt install ros-humble-nav2-map-server
 sudo apt install ros-humble-nav2-behavior-tree
 ```
 
+### Install STVL (Spatio-Temporal Voxel Layer) 3D layer
+```bash
+sudo apt install ros-humble-spatio-temporal-voxel-layer
+```
+
 ### Install Cartographer SLAM
 ```bash
 sudo apt install ros-humble-cartographer ros-humble-cartographer-ros
