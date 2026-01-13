@@ -1,0 +1,455 @@
+<?xml version="1.0"?>
+<robot name="ros2_bot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>  PROPERTY  <<<<<<<<<<<<<<<<<<<<<<<<<<<<< -->
+
+    <xacro:property name="base_length" value="0.6" />
+    <xacro:macro name="box_inertia" params="m x y z o_xyz o_rpy">
+        <inertial>
+            <mass value="${m}" />
+            <origin xyz = "${o_xyz}" rpy = "${o_rpy}"/>
+            <inertia ixx="${(m/12)*(y*y + z*z)}" ixy="0" ixz="0"
+                     iyy="${(m/12)*(x*x + z*z)}" iyz="0"
+                     izz="${(m/12)*(x*x + y*y)}"/>
+        </inertial>
+    </xacro:macro>
+
+    <xacro:macro name="cylinder_inertia" params="m r l o_xyz o_rpy">
+        <inertial>
+            <mass value="${m}" />
+            <origin xyz = "${o_xyz}" rpy = "${o_rpy}"/>
+            <inertia ixx="${(m/12)*(3*r*r + l*l)}" ixy="0" ixz="0"
+                     iyy="${(m/12)*(3*r*r + l*l)}" iyz="0"
+                     izz="${(m/2)*(r*r)}"/>
+        </inertial>
+    </xacro:macro>
+
+    <xacro:macro name="sphere_inertia" params="m r o_xyz o_rpy">
+        <inertial>
+            <mass value="${m}" />
+            <origin xyz = "${o_xyz}" rpy = "${o_rpy}"/>
+            <inertia ixx="${(2/5)*m*r*r}" ixy="0" ixz="0"
+                     iyy="${(2/5)*m*r*r}" iyz="0"
+                     izz="${(2/5)*m*r*r}"/>
+        </inertial>
+    </xacro:macro>
+
+<!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>  COLOUR  <<<<<<<<<<<<<<<<<<<<<<<<<<<<< -->
+
+    <material name="Dark Orange">
+        <color rgba="0.8 0.4 0.0 1"/>
+    </material>
+
+    <material name="Black">
+        <color rgba="0 0 0 1"/>
+    </material>
+
+    <material name="Blue">
+        <color rgba="0 0 0.5 1" />
+    </material>
+
+    <material name="Red">
+        <color rgba="1.0 0 0 1" />
+    </material>
+
+<!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>  LINK  <<<<<<<<<<<<<<<<<<<<<<<<<<<<< -->
+
+    <link name="base_footprint" />
+
+    <link name="base_link">
+        <visual>
+            <geometry>
+                <box size="${base_length} 0.4 0.2" />
+            </geometry>
+            <origin xyz="0 0 0.1" rpy="0 0 0" />
+            <material name="Dark Orange" />
+        </visual>
+        <collision>
+            <geometry>
+                <box size="${base_length} 0.4 0.2" />
+            </geometry>
+            <origin xyz="0 0 0.1" rpy="0 0 0" />
+        </collision>
+        <xacro:box_inertia m="0.1" x="${base_length}" y="0.4" z="0.2" o_xyz="0 0 1" o_rpy="0 0 0"/>
+    </link>
+
+    <link name="right_wheel_link">
+        <visual>
+            <geometry>
+                <cylinder radius="0.1" length="0.05" />
+            </geometry>
+            <origin xyz="0 0 0" rpy="${pi / 2.0} 0 0" />
+            <material name="Black" />
+        </visual>
+        <collision>
+            <geometry>
+                <sphere radius="0.1"/>
+            </geometry>
+            <origin xyz="0 0 0" rpy="${pi / 2.0} 0 0" />
+        </collision>
+        <xacro:cylinder_inertia m="0.5" r="0.1" l="0.05" o_xyz="0 0 0" o_rpy="${pi / 2.0} 0 0"/>
+    </link>
+
+    <link name="left_wheel_link">
+        <visual>
+            <geometry>
+                <cylinder radius="0.1" length="0.05" />
+            </geometry>
+            <origin xyz="0 0 0" rpy="${pi / 2.0} 0 0" />
+            <material name="Black" />
+        </visual>
+        <collision>
+            <geometry>
+                <sphere radius="0.1"/>
+            </geometry>
+            <origin xyz="0 0 0" rpy="${pi / 2.0} 0 0" />
+        </collision>
+        <xacro:cylinder_inertia m="0.5" r="0.1" l="0.05" o_xyz="0 0 0" o_rpy="${pi / 2.0} 0 0"/>
+    </link>
+
+    <link name="caster_wheel_link_1">
+        <visual>
+            <geometry>
+                <sphere radius="0.05" />
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <material name="Black" />
+        </visual>
+        <collision>
+            <geometry>
+                <sphere radius="0.05" />
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+        </collision>
+        <xacro:sphere_inertia m="0.05" r="0.05" o_xyz="0 0 0" o_rpy="0 0 0"/>
+    </link>
+
+    <link name="caster_wheel_link_2">
+        <visual>
+            <geometry>
+                <sphere radius="0.05" />
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <material name="Black" />
+        </visual>
+        <collision>
+            <geometry>
+                <sphere radius="0.05" />
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+        </collision>
+        <xacro:sphere_inertia m="0.05" r="0.05" o_xyz="0 0 0" o_rpy="0 0 0"/>
+    </link>
+
+    <link name="lidar_base">
+        <visual>
+            <geometry>
+                <cylinder radius="0.06" length="0.08" />
+                <!-- <box size="0.15 0.1 0.05" /> -->
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <material name="Dark Orange" />
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder radius="0.06" length="0.08"/>
+                <!-- <box size="${base_length} 0.4 0.2" /> -->
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+        </collision>
+        <!-- <xacro:box_inertia m="0.025" x="0.15" y="0.1" z="0.05" o_xyz="0 0 1" o_rpy="0 0 0"/> -->
+        <xacro:cylinder_inertia m="0.25" r="0.1" l="0.05" o_xyz="0 0 0.1" o_rpy="0 0 0"/>
+    </link>
+
+    <link name="lidar">
+        <visual>
+            <geometry>
+                <cylinder radius="0.06" length="0.08" />
+                <!-- <box size="0.15 0.1 0.05" /> -->
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <material name="Red" />
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder radius="0.06" length="0.08"/>
+                <!-- <box size="${base_length} 0.4 0.2" /> -->
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+        </collision>
+        <!-- <xacro:box_inertia m="0.025" x="0.15" y="0.1" z="0.05" o_xyz="0 0 1" o_rpy="0 0 0"/> -->
+        <xacro:cylinder_inertia m="0.25" r="0.1" l="0.05" o_xyz="0 0 0.1" o_rpy="0 0 0"/>
+    </link>
+
+<!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>  JOINTS  <<<<<<<<<<<<<<<<<<<<<<<<<<<<< -->
+
+    <joint name="base_joint" type="fixed">
+        <parent link="base_footprint" />
+        <child link="base_link" />
+        <origin xyz="0 0 0.1" rpy="0 0 0"/>
+    </joint>
+
+    <joint name="base_right_wheel_joint" type="continuous">
+        <parent link="base_link" />
+        <child link="right_wheel_link" />
+        <origin xyz="0 -0.225 0" rpy="0 0 0" />
+        <axis xyz="0 1 0" />
+    </joint>
+
+    <joint name="base_left_wheel_joint" type="continuous">
+        <parent link="base_link" />
+        <child link="left_wheel_link" />
+        <origin xyz="0 0.225 0" rpy="0 0 0" />
+        <axis xyz="0 1 0" />
+    </joint>
+
+    <joint name="base_caster_wheel_1_joint" type="fixed">
+        <parent link="base_link" />
+        <child link="caster_wheel_link_1" />
+        <origin xyz="0.2 0 -0.05" rpy="0 0 0" />
+    </joint>
+
+    <joint name="base_caster_wheel_2_joint" type="fixed">
+        <parent link="base_link" />
+        <child link="caster_wheel_link_2" />
+        <origin xyz="-0.2 0 -0.05" rpy="0 0 0" />
+    </joint>
+
+    <joint name="lidar_base_joint" type="fixed">
+        <parent link="base_link" />
+        <child link="lidar_base" />
+        <origin xyz="0 0 0.2" rpy="0 0 0" />
+    </joint>
+
+    <joint name="lidar_joint" type="fixed">
+        <parent link="base_link" />
+        <child link="lidar" />
+        <origin xyz="0 0 0.28" rpy="0 0 0" />
+    </joint>
+
+<!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>  CAMERA LINK AND JOINT  <<<<<<<<<<<<<<<<<<<<<<<<<<<<< -->
+
+<!-- Simple camera link – no tilt at all -->
+<link name="camera_link">
+  <visual>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <box size="0.05 0.05 0.03"/>
+    </geometry>
+    <material name="Blue"/>
+  </visual>
+</link>
+
+<!-- Fixed joint – camera sits exactly on top, perfectly level -->
+<joint name="camera_joint" type="fixed">
+  <parent link="base_link"/>
+  <child link="camera_link"/>
+  <origin xyz="0.06 0 0.50" rpy="0 0 0"/>   <!-- only moved forward 5 cm and up 40 cm, NO pitch -->
+</joint>
+
+<!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>  FRICTION  <<<<<<<<<<<<<<<<<<<<<<<<<<<<< -->
+
+    <gazebo reference="caster_wheel_link_1">
+        <mu1 value="0.0" />
+        <mu2 value="0.0" />
+    </gazebo>
+
+    <gazebo reference="caster_wheel_link_2">
+        <mu1 value="0.0" />
+        <mu2 value="0.0" />
+    </gazebo>
+
+    <gazebo reference="right_wheel_link">
+        <mu1>0.2</mu1>
+        <mu2>20.0</mu2>
+        <fdir1>1 0 0</fdir1>
+        <slip1>0.0</slip1>
+        <slip2>0.0</slip2>
+    </gazebo>
+
+    <gazebo reference="left_wheel_link">
+        <mu1>0.2</mu1>
+        <mu2>20.0</mu2>
+        <fdir1>1 0 0</fdir1>
+        <slip1>0.0</slip1>
+        <slip2>0.0</slip2>
+    </gazebo>
+
+<!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>  PLUGIN  <<<<<<<<<<<<<<<<<<<<<<<<<<<<< -->
+
+<gazebo>
+
+    <plugin filename="libignition-gazebo-joint-state-publisher-system.so" name="ignition::gazebo::systems::JointStatePublisher">
+      <topic>/joint_states</topic>
+    </plugin>
+
+    <plugin
+      filename="libignition-gazebo-sensors-system.so"
+      name="ignition::gazebo::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin> 
+
+<!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>  ENABLE FOR USE ODOM FROM DIFF-DRIVE  <<<<<<<<<<<<<<<<<<<<<<<<<<<<< -->
+
+  <!-- <plugin
+      filename="libignition-gazebo-diff-drive-system.so"
+      name="ignition::gazebo::systems::DiffDrive">
+      <left_joint>base_left_wheel_joint</left_joint>
+      <right_joint>base_right_wheel_joint</right_joint>
+      <wheel_separation>0.45</wheel_separation>
+      <wheel_diameter>0.1</wheel_diameter>
+      <topic>cmd_vel</topic>
+      <tf_topic>/tf</tf_topic>
+      <odom_topic>/odom</odom_topic>
+      <odom_publish_frequency>50</odom_publish_frequency>
+      <frame_id>odom</frame_id>
+      <odom_frame>odom</odom_frame>
+      <child_frame_id>base_footprint</child_frame_id>
+  </plugin> -->
+
+  <!-- FOR USE THIS COMMENT ODOM PLUGIN -->
+
+<!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>  ENABLE FOR USE ODOM FROM ODOM PLUGIN  <<<<<<<<<<<<<<<<<<<<<<<<<<<<< -->
+
+    <plugin
+        filename="libignition-gazebo-diff-drive-system.so"
+        name="ignition::gazebo::systems::DiffDrive">
+        <left_joint>base_left_wheel_joint</left_joint>
+        <right_joint>base_right_wheel_joint</right_joint>
+        <wheel_separation>0.45</wheel_separation>
+        <wheel_diameter>0.1</wheel_diameter>
+        <odom_publish_frequency>1</odom_publish_frequency>
+        <topic>cmd_vel</topic>
+    </plugin>
+
+    <plugin filename="ignition-gazebo-odometry-publisher-system" name="ignition::gazebo::systems::OdometryPublisher">
+      <odom_frame>odom</odom_frame>
+      <robot_base_frame>base_footprint</robot_base_frame>
+      <topic>/odom</topic>
+      <left_joint>base_left_wheel_joint</left_joint>
+      <right_joint>base_left_wheel_joint</right_joint>
+      <wheel_separation>0.45</wheel_separation>
+      <wheel_radius>0.05</wheel_radius>
+      <publish_tf>true</publish_tf>
+      <odom_publish_frequency>60</odom_publish_frequency>
+      <tf_topic>/tf</tf_topic>
+      <publish_rate>30</publish_rate>
+    </plugin>
+
+    <plugin filename="libignition-gazebo-imu-system.so"
+            name="ignition::gazebo::systems::Imu">
+    </plugin>
+
+</gazebo>
+
+<!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>  SENSOR  <<<<<<<<<<<<<<<<<<<<<<<<<<<<< -->
+
+<!-- Camera sensor -->
+<gazebo reference="camera_link">
+<sensor name="depth_camera" type="rgbd_camera">
+        <always_on>true</always_on>
+        <visualize>true</visualize>
+        <update_rate>5.0</update_rate>
+        <topic>depth_camera</topic>
+        <gz_frame_id>camera_link</gz_frame_id>
+        <camera>
+          <horizontal_fov>1.047198</horizontal_fov>
+          <image>
+            <width>1280</width>
+            <height>720</height>
+          </image>
+          <clip>
+            <near>0.1</near>
+            <far>15</far>
+          </clip>
+        </camera>
+        <baseline>0.2</baseline>
+        <pointCloudCutoff>0.5</pointCloudCutoff>
+        <pointCloudCutoffMax>3.0</pointCloudCutoffMax>
+        <distortionK1>0</distortionK1>
+        <distortionK2>0</distortionK2>
+        <distortionK3>0</distortionK3>
+        <distortionT1>0</distortionT1>
+        <distortionT2>0</distortionT2>
+        <CxPrime>0</CxPrime>
+        <Cx>0</Cx>
+        <Cy>0</Cy>
+        <focalLength>0</focalLength>
+        <hackBaseline>0</hackBaseline>
+      </sensor>
+</gazebo>
+
+
+<!-- 2D Lidar sensor -->
+<gazebo reference="lidar">
+  <sensor name="gpu_lidar" type="gpu_lidar">
+  <pose relative_to='lidar'>0 0 0 0 0 0</pose>
+  <ignition_frame_id>lidar</ignition_frame_id>
+    <topic>/scan</topic>
+    <update_rate>30</update_rate>
+    <ray>
+      <scan>
+        <horizontal>
+          <samples>360</samples>
+          <resolution>1</resolution>
+          <min_angle>-3.14</min_angle>
+          <max_angle>3.14</max_angle>
+        </horizontal>
+      </scan>
+      <range>
+        <min>0.2</min>
+        <max>10.0</max>
+        <resolution>0.01</resolution>
+      </range>
+    </ray>
+    <always_on>1</always_on>
+    <visualize>true</visualize>
+  </sensor>
+</gazebo>
+
+<!-- IMU sensor -->
+<gazebo reference="base_link">
+  <sensor name="imu_sensor" type="imu">
+      <always_on>true</always_on>
+      <ignition_frame_id>base_link</ignition_frame_id>
+      <frame_id>base_link</frame_id>
+      <update_rate>20</update_rate>
+      <visualize>true</visualize>
+      <topic>imu</topic>
+  </sensor>
+</gazebo>
+
+<!-- 3D lidar sensor -->
+<gazebo reference="lidar">
+      <sensor name="lidar_sensor" type="gpu_ray">
+        <pose>0 0 0.0 0 0 0</pose>
+        <update_rate>20</update_rate>
+        <visualize>true</visualize>
+        <ignition_frame_id>lidar</ignition_frame_id>
+        <topic>/lidar</topic>
+        <ray>
+          <scan>
+            <horizontal>
+              <samples>360</samples>
+              <min_angle>-3.14</min_angle>
+              <max_angle>3.14</max_angle>
+            </horizontal>
+            <vertical>
+              <samples>16</samples>
+              <min_angle>-0.0000</min_angle> <!-- -15 deg -->
+              <max_angle>0.5000</max_angle>  <!-- +15 deg -->
+            </vertical>
+          </scan>
+          <range>
+            <min>0.2</min>
+            <max>30.0</max>
+            <resolution>0.01</resolution>
+          </range>
+        </ray>
+        <always_on>1</always_on>
+        <visualize>true</visualize>
+
+      </sensor>
+</gazebo>
+
+</robot>
