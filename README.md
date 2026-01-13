@@ -115,7 +115,7 @@ ros2 launch robot_navigation cartographer_localization.launch.py
 ```
 - Now rviz is open and robot spawn in robot’s initial pose on the map and start Cartographer localization.
 - Then use Nav2 Goal / 2D Goal Pose to send a navigation goal. The robot will autonomously plan a path and move toward the target, avoiding obstacles and reaching the goal successfully.
-- With SLAM Toolbox Localization, you will observe highly accurate pose estimation with minimal to no odometry drift, thanks to loop closure and pose graph optimization, which continuously refines the robot’s position on the map for precise localization.
+- With Cartographer Localization, you will observe highly accurate pose estimation with minimal to no odometry drift, thanks to loop closure and pose graph optimization, which continuously refines the robot’s position on the map for precise localization.
 
 <img width="1848" height="1053" alt="Screenshot from 2026-01-13 15-31-16" src="https://github.com/user-attachments/assets/ec3f8d2a-3dfd-43cb-a8f2-58268bf244e0" />
 
